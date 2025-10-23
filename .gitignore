@@ -1,15 +1,35 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+gradle-app.setting
+
+# Android Studio
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.hprof
+
+# Local configuration
 local.properties
+
+# Log & captures
+*.log
+captures/
+
+# External native build
+.externalNativeBuild/
+.cxx/
+
+# Jetpack Compose Preview cache
+compose-cache/
+
+# Mac/Linux/Windows junk files
+.DS_Store
+Thumbs.db
+
+# Kotlin build
+kotlin-js-store/
+
+# Misc
+*.apk
+*.aab
