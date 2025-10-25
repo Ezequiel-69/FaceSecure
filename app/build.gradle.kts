@@ -57,6 +57,23 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version") // para corrutinas
 
+    // CameraX
+    val camerax_version = "1.3.0"
+    implementation("androidx.camera:camera-core:$camerax_version")
+    implementation("androidx.camera:camera-camera2:$camerax_version")
+    implementation("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation("androidx.camera:camera-view:$camerax_version")
+    implementation("androidx.camera:camera-extensions:$camerax_version")
+
+    // ML Kit Face Detection
+    implementation("com.google.mlkit:face-detection:16.1.6")
+
+    // TensorFlow Lite runtime
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
+    // Si quieres usar soporte para GPU u operaciones optimizadas (opcional)
+    // implementation 'org.tensorflow:tensorflow-lite-gpu:2.14.0'
+    // Si tu modelo TFLite necesita soporte para operadores de soporte (compatibilidad)
+    // implementation 'org.tensorflow:tensorflow-lite-support:0.4.3'
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -65,4 +82,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Para tests instrumentados (GrantPermissionRule)
+    androidTestImplementation("androidx.test:rules:1.5.0")
+
 }

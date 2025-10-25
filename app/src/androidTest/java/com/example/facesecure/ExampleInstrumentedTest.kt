@@ -1,6 +1,7 @@
 package com.example.facesecure
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -48,9 +49,24 @@ class UserDatabaseTest {
 
         val users = userDao.getAll()
         assertEquals(1, users.size)
-        assertEquals("test@example.com", users[0].email)
+        assertEquals("test", users[0].email)
         assertEquals(listOf(0.1f, 0.2f, 0.3f), users[0].faceEmbedding)
 
     }
+
+    @Test
+    fun printUsers() = runBlocking<Unit> {
+        val user = User(
+            email = "test@example.com",
+            password = "123",
+            faceEmbedding = listOf(0.1f, 0.2f, 0.3f)
+        )
+        userDao.insertUser(user)
+
+        val users = userDao.getAll()
+        Log.d("USER_TEST", "Usuarios en la BD: $users")
+    }
+
+
 
 }
