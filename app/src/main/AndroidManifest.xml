@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <!-- ✅ NUEVA Activity de prueba -->
+        <!-- NUEVA Activity de prueba -->
         <activity
             android:name=".test.TestCameraManagerActivity"
             android:exported="true"
@@ -34,6 +34,12 @@
 
         <activity
             android:name=".test.TestFaceAnalyzerActivity"
+            android:exported="true"
+            android:label="Test Camera Manager"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".test.TestRegisterFlowActivity"
             android:exported="true"
             android:label="Test Camera Manager"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
