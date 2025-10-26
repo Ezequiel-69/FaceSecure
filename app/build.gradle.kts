@@ -42,6 +42,7 @@ android {
     }
 }
 
+// Re-syncing project
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.navigation.compose)
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
