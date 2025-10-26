@@ -21,14 +21,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.facesecure.R
+import com.example.facesecure.viewmodel.RegisterViewModel
 
 @Composable
 fun RegisterScreen(navController: NavController) {
+    val registerViewModel: RegisterViewModel = viewModel()
+    val context = LocalContext.current
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -37,21 +41,32 @@ fun RegisterScreen(navController: NavController) {
     ) {
         Text(text = "Crea tu cuenta")
         Spacer(modifier = Modifier.height(16.dp))
+
         OutlinedTextField(
             value = username,
-            onValueChange = { username = it },
-            label = { Text("Usuario") }
+            onValueChange = {
+                username = it
+                registerViewModel.onEmailChange(it) // ✅ sincroniza con el ViewModel
+            },
+            label = { Text("Usuario / Email") }
         )
+
         Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = {
+                password = it
+                registerViewModel.onPasswordChange(it) // ✅ sincroniza también
+            },
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation()
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(
-            onClick = { 
+            onClick = {
                 val mediaPlayer = MediaPlayer.create(context, R.raw.button_click)
                 mediaPlayer.setOnCompletionListener { mp ->
                     navController.navigate("facial_recognition")
@@ -64,7 +79,7 @@ fun RegisterScreen(navController: NavController) {
                 contentColor = Color.White
             )
         ) {
-            Text(text = "Registrar y continuar")
+            Text("Registrar y continuar")
         }
     }
 }
