@@ -1,84 +1,199 @@
-# 🧠 FaceSecure
+# 🧠 FaceSecure — Registro y autenticación facial en Android
 
-FaceSecure es una aplicación Android desarrollada en **Kotlin** 
-que implementa un sistema básico de **registro e inicio de sesión** 
-con persistencia local mediante **Room Database**, y que posteriormente integrará 
-**detección y análisis facial en tiempo real** utilizando **CameraX**, **ML Kit** 
-y **TensorFlow Lite**.
+**FaceSecure** es una aplicación Android desarrollada en **Kotlin** con **Jetpack Compose**, que combina autenticación facial mediante **ML Kit**, persistencia local con **Room**, y manejo de cámara con **CameraX**.
+Su propósito es ofrecer un flujo completo de registro y login de usuarios con reconocimiento facial embebido.
 
 ---
 
-## 📱 Características actuales (versión base)
+## 🚀 Características principales
 
-✅ Arquitectura organizada por capas:
-- `data/model` → Modelos de datos (User)
-- `data/local` → Acceso a base de datos (Room + DAO)
-- `data/repository` → Capa de repositorio (intermediario entre DAO y ViewModel)
-- `ui/screens` → Pantallas de registro, login, inicio, etc.
-- `viewmodel` → Control de la lógica de UI
-
-✅ Persistencia local implementada con **Room**
-- Entidad `User` con anotaciones `@Entity` y `@PrimaryKey`.
-- Campo `faceEmbedding` (lista de floats) para almacenar la representación facial del usuario.
-- `Converters.kt` para convertir listas de floats a cadenas JSON y viceversa.
-- `UserDao` para insertar y consultar usuarios.
-- `AppDatabase` para inicializar la base de datos y exponer `userDao()`.
-
-✅ Dependencias configuradas:
-- Room (runtime, compiler y ktx)
-- Kotlin coroutines
-- Jetpack Compose (para interfaz)
-- AndroidX core, lifecycle y activity-compose
+✅ **Registro de usuario completo** (correo, contraseña y rostro)
+✅ **Captura facial con CameraX**
+✅ **Extracción de embeddings faciales** usando TensorFlow Lite
+✅ **Comparación de rostros** con `FaceComparator`
+✅ **Base de datos local Room** para almacenar usuarios
+✅ **Flujo de navegación con Jetpack Navigation Compose**
+✅ **Arquitectura MVVM** con `ViewModel`, `Repository` y `RoomDatabase`
+✅ **Pruebas instrumentadas** para analizar cámara y flujo de registro
+✅ **Diseño limpio y moderno** con Material3
 
 ---
 
-## 🔧 Technologist y librerías
+## 📱 Flujo general de la aplicación
 
-| Herramienta         | Uso                                                                |
-|---------------------|--------------------------------------------------------------------|
-| **Kotlin**          | Lenguaje principal                                                 |
-| **Jetpack Compose** | Interfaz moderna y reactiva                                        |
-| **Room**            | Base de datos local con ORM                                        |
-| **Coroutines**      | Ejecución asíncrona (operaciones de base de datos sin bloquear UI) |
-| **CameraX**         | Acceso a la cámara en tiempo real                                  |
-| **ML Kit**          | Detección de rostros en tiempo real                                |
-| **TensorFlow Lite** | Generación y comparación de embeddings faciales                    |
+1. **Inicio (`StartScreen`)**
+   Pantalla de bienvenida que permite acceder al registro o login.
 
----
+2. **Registro (`RegisterScreen`)**
+   El usuario ingresa su correo y contraseña.
+   Al continuar, se reproduce un sonido y navega a la captura facial.
 
-## 🧪 Test actuales:
+3. **Reconocimiento facial (`FacialRecognitionScreen`)**
+   Activa la cámara frontal y usa **ML Kit Face Detection** para detectar el rostro.
+   Luego genera un **embedding facial (vector de 512 floats)** con el modelo `facenet.tflite`.
 
-Actualmente, la app incluye un test básico (`UserDaoTest.kt`) que:
+4. **Almacenamiento**
+   El `RegisterViewModel` combina los datos y los guarda en Room como un objeto `User`:
 
-- Crea una base de datos Room en memoria.
-- Inserta un usuario.
-- Recupera y valida los datos almacenados.
+   ```kotlin
+   User(
+       email = "usuario@correo.com",
+       password = "123456",
+       faceEmbedding = [...512 floats...]
+   )
+   ```
 
----
-
-## 🧰 Requisitos
-
-- Android Studio Koala+ (o posterior)
-- Gradle 8.0+
-- Kotlin 1.9+
-- Android SDK 29+
-- Emulador Android (AVD) o dispositivo físico
+5. **Inicio de sesión facial (próxima fase)**
+   Compara el embedding actual con los guardados para validar identidad.
 
 ---
 
-## 🧑‍💻 Autor
+## 🏗️ Arquitectura del proyecto
 
-**Ezequiel Aceituno Schmidt** 
-**Cristian Collao Aranciba**
-**ChatGPT**
-Desarrolladores Android en formación — Chile 🇨🇱  
-📚 Proyecto académico integrando *Room + CameraX + ML Kit + TensorFlow Lite*
+**MVVM + Clean Architecture**
+
+```
+app/
+ ├── data/
+ │   ├── local/             # Room Database, DAO y Converters
+ │   ├── model/             # Modelos de datos (User)
+ │   └── repository/        # Lógica de acceso a datos
+ ├── camera/                # Controladores de cámara y análisis facial
+ ├── ml/                    # Modelos de machine learning (TFLite, comparador)
+ ├── ui/
+ │   ├── screens/           # Pantallas Compose (Start, Register, FacialRecognition, etc.)
+ │   └── theme/             # Colores y estilos
+ ├── viewmodel/             # ViewModels de Login, Register y User
+ ├── test/                  # Actividades de prueba (CameraManager, FaceAnalyzer, etc.)
+ └── MainActivity.kt        # Punto de entrada, configuración de navegación
+```
 
 ---
 
-## 🪪 Licencia
+## 🧩 Tecnologías utilizadas
 
-MIT License © 2025 — Puedes usar este código libremente para aprendizaje o proyectos personales.
+| Componente             | Librería                      | Versión aproximada |
+| ---------------------- | ----------------------------- | ------------------ |
+| 🧠 Machine Learning    | TensorFlow Lite               | 2.14.0             |
+| 🤖 Face Detection      | ML Kit                        | 16.1.6             |
+| 📸 Cámara              | CameraX                       | 1.3.0              |
+| 💾 Base de datos local | Room                          | 2.6.1              |
+| 🎨 Interfaz moderna    | Jetpack Compose + Material3   | BOM                |
+| 🧭 Navegación          | Navigation Compose            | 2.7+               |
+| 🧱 Arquitectura        | MVVM + ViewModel + Coroutines | —                  |
+| 🧪 Pruebas             | JUnit + AndroidX Test Rules   | 1.5.0              |
 
+---
 
+## ⚙️ Instalación y configuración
 
+1. **Clonar el repositorio**
+
+   ```bash
+   git clone https://github.com/tuusuario/facesecure.git
+   cd facesecure
+   ```
+
+2. **Abrir en Android Studio**
+
+   * Usa **Android Studio Koala (o superior)**.
+   * Selecciona “Open existing project”.
+
+3. **Configurar el entorno**
+
+   * SDK mínimo: 29
+   * SDK objetivo: 36
+   * Activa permisos de cámara en `AndroidManifest.xml`:
+
+     ```xml
+     <uses-permission android:name="android.permission.CAMERA" />
+     <uses-permission android:name="android.permission.INTERNET" />
+     ```
+
+4. **Ejecutar el proyecto**
+
+   * Usa la configuración **“FaceSecure (app)”**.
+   * Emulador o dispositivo físico con cámara frontal.
+
+---
+
+## 🧠 Flujo de registro facial (detalle técnico)
+
+1. **CameraManager.kt**
+   Inicia la cámara frontal y procesa cada frame con `FaceAnalyzer`.
+
+2. **FaceAnalyzer.kt**
+
+   * Detecta el rostro con ML Kit.
+   * Convierte el frame a `Bitmap`.
+   * Recorta el rostro y obtiene el embedding facial con `FaceEmbeddingExtractor`.
+
+3. **RegisterViewModel.kt**
+
+   * Combina correo + contraseña + embedding.
+   * Inserta el `User` en `Room`.
+   * Muestra el estado del registro con `StateFlow`.
+
+4. **HomeScreen.kt**
+   Pantalla final tras un registro exitoso.
+
+---
+
+## 🧪 Pruebas del flujo facial
+
+Puedes usar la actividad de prueba:
+
+```
+com.example.facesecure.test.TestRegisterFlowActivity
+```
+
+O el test de cámara individual:
+
+```
+com.example.facesecure.test.TestCameraManagerActivity
+```
+
+En ambos casos, puedes seguir el log en **Logcat** con el filtro:
+
+```
+FACIAL_SCREEN | REGISTER_FLOW | CAMERA_MANAGER
+```
+
+Esto mostrará todos los pasos del flujo (detección, embeddings, guardado, errores).
+
+---
+
+## 📂 Base de datos local (Room)
+
+* **Nombre:** `face_secure_database`
+* **Entidad:** `User`
+* **Campos:**
+
+  ```kotlin
+  data class User(
+      @PrimaryKey(autoGenerate = true) val id: Int = 0,
+      val email: String,
+      val password: String,
+      val faceEmbedding: List<Float>
+  )
+  ```
+
+Puedes inspeccionarla desde **Device File Explorer → data/data/com.example.facesecure/databases/**
+Archivo: `face_secure_database`
+
+---
+
+## 🧱 Próximas mejoras
+
+🔸 Implementar autenticación facial (comparación de embeddings con `FaceComparator`)
+🔸 Encriptar embeddings y contraseñas
+🔸 Integrar almacenamiento remoto (Firebase / API)
+🔸 Agregar pantalla de perfil y cierre de sesión
+🔸 Optimizar rendimiento del detector en tiempo real
+
+---
+
+## 👩‍💻 Autoría
+
+**Desarrollado por:** Ezequiel Aceituno y Cristian Collao
+**Proyecto académico y experimental con reconocimiento facial local.**
