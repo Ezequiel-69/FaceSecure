@@ -29,7 +29,11 @@ fun StartScreen(navController: NavController) {
 
     val interactionSource2 = remember { MutableInteractionSource() }
     val estaPresionado2 by interactionSource2.collectIsPressedAsState()
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 1f4d551ffe33ba663fcd97cb689aad5777a9f175
     val button1ContainerColor = if (estaPresionado1) Color.Green else Color.LightGray
     val button2ContainerColor = if (estaPresionado2) Color.Green else Color.DarkGray
 
@@ -40,7 +44,7 @@ fun StartScreen(navController: NavController) {
     ) {
         Text(text = "¡Hola! ¿ya estás registrado?")
         Button(
-            onClick = { 
+            onClick = {
                 val mediaPlayer = MediaPlayer.create(context, R.raw.button_click)
                 mediaPlayer.setOnCompletionListener { mp ->
                     navController.navigate("login")
@@ -57,7 +61,7 @@ fun StartScreen(navController: NavController) {
             Text(text = "Mi rostro ya está registrado")
         }
         Button(
-            onClick = { 
+            onClick = {
                 val mediaPlayer = MediaPlayer.create(context, R.raw.button_click)
                 mediaPlayer.setOnCompletionListener { mp ->
                     navController.navigate("register")
