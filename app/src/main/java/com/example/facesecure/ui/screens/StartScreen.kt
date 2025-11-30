@@ -1,6 +1,8 @@
 package com.example.facesecure.ui.screens
 
 import android.media.MediaPlayer
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +10,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +22,16 @@ import com.example.facesecure.R
 @Composable
 fun StartScreen(navController: NavController) {
     val context = LocalContext.current
+
+    // Interaction sources for button press animations
+    val interactionSource1 = remember { MutableInteractionSource() }
+    val estaPresionado1 by interactionSource1.collectIsPressedAsState()
+
+    val interactionSource2 = remember { MutableInteractionSource() }
+    val estaPresionado2 by interactionSource2.collectIsPressedAsState()
+    
+    val button1ContainerColor = if (estaPresionado1) Color.Green else Color.LightGray
+    val button2ContainerColor = if (estaPresionado2) Color.Green else Color.DarkGray
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -34,8 +48,9 @@ fun StartScreen(navController: NavController) {
                 }
                 mediaPlayer.start()
             },
+            interactionSource = interactionSource1,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.LightGray,
+                containerColor = button1ContainerColor,
                 contentColor = Color.Black
             )
         ) {
@@ -50,8 +65,9 @@ fun StartScreen(navController: NavController) {
                 }
                 mediaPlayer.start()
             },
+            interactionSource = interactionSource2,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.DarkGray,
+                containerColor = button2ContainerColor,
                 contentColor = Color.White
             )
         ) {
