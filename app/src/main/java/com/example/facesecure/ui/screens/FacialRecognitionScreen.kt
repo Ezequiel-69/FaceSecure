@@ -34,7 +34,7 @@ fun FacialRecognitionScreen(navController: NavController) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // ✅ Forma compatible con versiones antiguas y nuevas
+    // Forma compatible con versiones antiguas y nuevas
     val navBackStackEntry = remember(navController) {
         navController.getBackStackEntry("register")
     }
