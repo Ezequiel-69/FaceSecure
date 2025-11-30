@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.facesecure.ui.screens.FacialRecognitionScreen
 import com.example.facesecure.ui.screens.HomeScreen
 import com.example.facesecure.ui.screens.LoginScreen
+import com.example.facesecure.ui.screens.LoginSuccessScreen
 import com.example.facesecure.ui.screens.RegisterScreen
 import com.example.facesecure.ui.screens.StartScreen
 import com.example.facesecure.ui.theme.FaceSecureTheme
@@ -35,6 +36,9 @@ fun AppNavigation() {
         }
         composable("login") {
             LoginScreen(navController = navController)
+        }
+        composable("login_success") {
+            LoginSuccessScreen(navController = navController)
         }
         composable("register") {
             RegisterScreen(navController = navController)

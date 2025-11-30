@@ -78,6 +78,10 @@ dependencies {
     // Si tu modelo TFLite necesita soporte para operadores de soporte (compatibilidad)
     // implementation 'org.tensorflow:tensorflow-lite-support:0.4.3'
 
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

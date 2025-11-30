@@ -1,41 +1,49 @@
 package com.example.facesecure.ui.screens
 
-import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.facesecure.R
 import com.example.facesecure.viewmodel.RegisterViewModel
 
 @Composable
 fun RegisterScreen(navController: NavController) {
-    val registerViewModel: RegisterViewModel = viewModel()
-    val context = LocalContext.current
+    // Usamos "register" como el scope del ViewModel para compartirlo con la pantalla de reconocimiento
+    val registerViewModel: RegisterViewModel = viewModel(navController.getBackStackEntry("register"))
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val nombre by registerViewModel.nombre.collectAsState()
+    val email by registerViewModel.email.collectAsState()
+    val password by registerViewModel.password.collectAsState()
+    val isSaving by registerViewModel.isSaving.collectAsState()
+    val statusMessage by registerViewModel.statusMessage.collectAsState()
+    val navigate by registerViewModel.navigateToFacialRecognition.collectAsState()
+
+    // Efecto para manejar la navegación
+    LaunchedEffect(navigate) {
+        if (navigate) {
+            navController.navigate("facial_recognition")
+            registerViewModel.onNavigationComplete() // Resetea el estado de navegación
+        }
+    }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -43,43 +51,45 @@ fun RegisterScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = username,
-            onValueChange = {
-                username = it
-                registerViewModel.onEmailChange(it) // ✅ sincroniza con el ViewModel
-            },
-            label = { Text("Usuario / Email") }
+            value = nombre,
+            onValueChange = { registerViewModel.onNombreChange(it) },
+            label = { Text("Nombre") },
+            enabled = !isSaving
         )
+        Spacer(modifier = Modifier.height(8.dp))
 
+        OutlinedTextField(
+            value = email,
+            onValueChange = { registerViewModel.onEmailChange(it) },
+            label = { Text("Usuario / Email") },
+            enabled = !isSaving
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = password,
-            onValueChange = {
-                password = it
-                registerViewModel.onPasswordChange(it) // ✅ sincroniza también
-            },
+            onValueChange = { registerViewModel.onPasswordChange(it) },
             label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            enabled = !isSaving
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                val mediaPlayer = MediaPlayer.create(context, R.raw.button_click)
-                mediaPlayer.setOnCompletionListener { mp ->
-                    navController.navigate("facial_recognition")
-                    mp.release()
-                }
-                mediaPlayer.start()
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.DarkGray,
-                contentColor = Color.White
-            )
-        ) {
-            Text("Registrar y continuar")
+        if (isSaving) {
+            CircularProgressIndicator()
+        } else {
+            Button(
+                onClick = { registerViewModel.registerUserAndProceed() },
+                enabled = !isSaving
+            ) {
+                Text("Registrar y continuar")
+            }
+        }
+
+        statusMessage?.let {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = it)
         }
     }
 }
